@@ -1,3 +1,4 @@
+import axios from "axios";
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
@@ -28,8 +29,26 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
-
+const followersArray = [
+  "AD9018",
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "juancaruizc",
+  "bukit3point0",
+];
+followersArray.forEach((followerWheel) => {
+  axios
+    //  debugger
+    .get(`https://api.github.com/users/${followerWheel}`)
+    .then((res) => {
+      console.log(res.data);
+      cardContainer.append(card(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:
@@ -49,7 +68,58 @@ const followersArray = [];
       </div>
     </div>
 */
+// USING CONTAINER GLOBALLY
+const cardContainer = document.querySelector(".cards");
 
+const card = (data) => {
+  const container = document.createElement("div");
+  container.classList.add("card");
+
+  const img = document.createElement("img");
+  img.src = data.avatar_url;
+  container.appendChild(img);
+
+  const cardInformation = document.createElement("div");
+  cardInformation.classList.add("card-info");
+  container.appendChild(cardInformation);
+
+  const name = document.createElement("h3");
+  name.classList.add("name");
+  name.textContent = `${data.name}`;
+  cardInformation.appendChild(name);
+
+  const userName = document.createElement("p");
+  userName.classList.add("username");
+  userName.textContent = `${data.login}`;
+  cardInformation.appendChild(userName);
+
+  const location = document.createElement("p");
+  location.textContent = `Location: ${data.location}`;
+  cardInformation.appendChild(location);
+
+  const profile = document.createElement("p");
+  profile.innerHTML = `Profile: <a href = "${data.url}"> ${data.url}</a>`;
+  cardInformation.appendChild(profile);
+
+  const anchor = document.createElement("a");
+  anchor.href = data.html_url;
+  profile.appendChild(anchor);
+
+  const followers = document.createElement("p");
+  followers.textContent = `Followers: ${data.followers}`;
+  cardInformation.appendChild(followers);
+
+  const following = document.createElement("p");
+  following.textContent = `Following: ${data.following}`;
+  cardInformation.appendChild(following);
+
+  const bio = document.createElement("p");
+  bio.textContent = `Bio: ${data.bio}`;
+  cardInformation.appendChild(bio);
+  console.log(cardContainer);
+  return container;
+};
+card(data);
 /*
   List of LS Instructors Github username's:
     tetondan
